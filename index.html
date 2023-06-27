@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="code.js" defer> </script>
+    <script src="calc.js" defer> </script>
+    <script src="greet.js" defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <style>
+        .message {
+            background-color: black;
+            color: greenyellow;
+            padding: 1em;
+            width: 10em;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="heading">
+        <img src="health-clinic.png" width="60" alt="">
+        <img src="mountain.png" width="60" alt="">
+        <h1>AlpineJS clinic</h1>
+    </div>
+
+    <h2>Learn about the DOM</h1>
+
+        <section class="blocks">
+            <div class="block" x-data="{
+                green : 0,
+                red : 0,
+                eat(color) {
+                    if (color == 'red') {
+                        this.red++;
+                    }
+                    else if (color == 'green') {
+                        this.green++;
+                    }
+                },
+
+                resetApples() {
+                    this.green = 0;
+                    this.red = 0;
+                },
+                eatenEnoughGreen() {
+                    return this.green < 1
+                }
+            }">
+                <img src="apple_1.png" width="60" alt="" srcset="">
+
+                <template x-if="eatenEnoughGreen()">
+                    <button  x-on:click="eat('green')" >Eat green apple</button>
+                </template>
+
+
+                <img src="apple_2.png" width="60" alt="" srcset="">
+                <button x-on:click="eat('red')" >Eat red apple</button>
+
+                <div class="apples">
+                    <div>
+                        You have eaten <span class="apple_count" x-text="green"  >0</span> green apples
+                    </div>
+                    <div>
+                        You have eaten <span class="apple_count" x-text="red">0</span> red apples
+                    </div>
+                </div>
+
+                <button x-on:click="resetApples()" >Reset apple count</button>
+
+
+
+            </div>
+
+            <div class="block" x-data="{
+                greetMessage : '',
+                username : '',
+                greetMe() {
+                    this.greetMessage = greet(this.username);
+                    setTimeout(() => { 
+                        this.greetMessage = '';
+                        this.username = '';
+                    }, 4000);
+                }
+            }" x-init="username='Joe'"  >
+                <h3>Greet from AlpineJS</h3>
+                <div class="greet" x-text="greetMessage">
+                    Greeting goes here...
+                </div>
+                Greet this name: <input x-model="username" type="text">
+                <button x-on:click="greetMe()">Greet!</button>
+
+            </div>
+            <div class="block" x-data="{
+                selectedColor : 'no color selected...',
+                colors : ['Blue', 'Red', 'Orange', 'Green']
+            }" >
+                Selected color : <span x-text="selectedColor" >...</span>
+                <select x-model="selectedColor" >
+                    <option value="">Select color</option>
+                    <template x-for="color in colors">
+                        <option x-text="color" ></option>
+                    </template>
+                    
+                </select>
+            </div>
+        </section>
+
+
+        <section class="blocks">
+
+            <div class="block">
+                <div class="message">
+
+                </div>
+                <input type="text" class="username">
+                <button class="btn">Greet me</button>
+            </div>
+
+            <div class="block">
+                <h2>Increment/decrement</h2>
+
+                <div class="theNumber">
+                    0
+                </div>
+
+                <button class="increment">Increment</button>
+                <button class="decrement">Decrement</button>
+            </div>
+
+
+            <div class="block" x-data="{counter : 0}">
+
+                <h2>Increment/decrement with AlpineJS </h2>
+
+                <div x-text="counter">
+                </div>
+
+                <button x-on:click="counter++">Increment</button>
+                <button x-on:click="if (counter > 0) counter--">Decrement</button>
+            </div>
+        </section>
+
+
+
+
+
+
+        <a href="https://www.flaticon.com/free-icons/apple" title="apple icons">Apple icons created by justicon -
+            Flaticon</a>
+
+
+</body>
+
+
+</html>
