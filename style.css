@@ -36,3 +36,11 @@ body {
 }
 
 [x-cloak] { display: none !important; }
+
+.message {
+    background-color: lightslategray;
+    /* color: greenyellow; */
+    padding: 0.25em;
+    width: 10em;
+    margin-bottom: 0.5em;
+}

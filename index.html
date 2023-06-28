@@ -12,16 +12,9 @@
     <script src="code.js" defer> </script>
     <script src="calc.js" defer> </script>
     <script src="greet.js" defer></script>
+    <script src="data.js" defer></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-
-    <style>
-        .message {
-            background-color: black;
-            color: greenyellow;
-            padding: 1em;
-            width: 10em;
-        }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 
@@ -37,25 +30,62 @@
 
         <section class="blocks">
             <div class="block" x-data="{
-                green : 0,
-                red : 0,
-                eat(color) {
-                    if (color == 'red') {
-                        this.red++;
-                    }
-                    else if (color == 'green') {
-                        this.green++;
-                    }
+                cards : [1,2,3],
+                message : '',
+                clearMessage(){
+                    setTimeout(() => this.message = '', 3000);
                 },
+                shuffleCards() {
+                    this.message = 'Shuffling cards...'
+                    axios
+                        .get('https://deckofcardsapi.com/api/deck/7jrwjpvs4h6i/shuffle/')
+                        .then(() => {
+                            this.message = 'Cards shuffled';
+                            this.clearMessage();
+                        })
 
-                resetApples() {
-                    this.green = 0;
-                    this.red = 0;
                 },
-                eatenEnoughGreen() {
-                    return this.green < 1
+                drawCards() {
+                    // alert('draw cards!')
+
+                    // call the cards API...
+                    this.message = 'Drawing cards...'
+                    axios
+                        .get('https://deckofcardsapi.com/api/deck/7jrwjpvs4h6i/draw/?count=7')
+                        .then(result => {
+                            console.log(result.data.cards);
+                            this.cards = result.data.cards;
+                            this.message = 'Cards drawn...'
+                            this.clearMessage();
+                        });
+
+                    // put the returned cards into the cards list
+
                 }
-            }">
+
+
+            }"  >
+                <h2>Card game</h2>
+                <h3>Cards</h3>
+                <div class="message" x-text="message" x-show="message" >
+
+                </div>
+                <div>
+                    <template x-for="card in cards" >
+                        <img x-bind:src="card.image" width="80"  alt="" srcset="">
+                        <div x-text="card.code" ></div>
+                    </template>
+                </div>
+
+                <button x-on:click="drawCards" >Draw cards</button>
+                <button x-on:click="shuffleCards" >Shuffle cards</button>
+
+
+            </div>
+        </section>
+
+        <section class="blocks">
+            <div class="block" x-data="eatApples">
                 <img src="apple_1.png" width="60" alt="" srcset="">
 
                 <template x-if="eatenEnoughGreen()">
@@ -77,21 +107,9 @@
 
                 <button x-on:click="resetApples()" >Reset apple count</button>
 
-
-
             </div>
 
-            <div class="block" x-data="{
-                greetMessage : '',
-                username : '',
-                greetMe() {
-                    this.greetMessage = greet(this.username);
-                    setTimeout(() => { 
-                        this.greetMessage = '';
-                        this.username = '';
-                    }, 4000);
-                }
-            }" x-init="username='Joe'"  >
+            <div class="block" x-data="greetMe" x-init="username='Joe'"  >
                 <h3>Greet from AlpineJS</h3>
                 <div class="greet" x-text="greetMessage">
                     Greeting goes here...
